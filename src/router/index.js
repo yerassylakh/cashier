@@ -23,6 +23,24 @@ const routes = [
     meta: { layout: 'main', requiresAuth: true, requiresStock: false, },
     component: () => import('@/views/Stocks.vue'),
   },
+  {
+    path: '/sales',
+    name: 'Sales',
+    meta: { layout: 'main', requiresAuth: true, requiresStock: true, },
+    component: () => import('@/views/Sales.vue'),
+  },
+  {
+    path: '/write-off',
+    name: 'Write-off of goods',
+    meta: { layout: 'main', requiresAuth: true, requiresStock: true, },
+    component: () => import('@/views/WriteOff.vue'),
+  },
+  {
+    path: '/acceptance',
+    name: 'Acceptance of goods',
+    meta: { layout: 'main', requiresAuth: true, requiresStock: true, },
+    component: () => import('@/views/Acceptance.vue'),
+  },
 ];
 
 const router = new VueRouter({
@@ -49,23 +67,6 @@ router.beforeEach(async (to, from, next) => {
     }
   }
   next();
-
-
-  // await axios
-  //   .post(`${window.location.origin}/api/token`, null, {
-  //     headers: {
-  //       Authorization: `Bearer ${jwt}`,
-  //     },
-  //   })
-  //   .then(response => {
-  //     store.commit('setUserData', response.data);
-  //     return next();
-  //   })
-  //   .catch(error => {
-  //     store.commit('setMessage', { type: 'error', message: error.response.data.message });
-  //     store.commit('clearUserData');
-  //     return next('/signin');
-  //   });
 });
 
 export default router;

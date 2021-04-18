@@ -38,9 +38,6 @@ export default {
     dialog: false,
     isLoadingCreate: false,
   }),
-  destroyed() {
-    console.log('Destroy create dialog');
-  },
   methods: {
     closeDialog() {
       this.dialog = false;
@@ -51,17 +48,12 @@ export default {
       await this.$store.dispatch('product/createProduct');
       await this.$store.dispatch('product/getProducts');
       this.isLoadingCreate = false;
-      // if no error close dialog
+      this.dialog = false;
+      // if no error close dialog and clear
     },
     clear() {
       this.$store.commit('product/clearForm');
     },
-    test() {
-      console.log('clear');
-    },
-  },
-  deactivated() {
-    console.log('deactivdated');
   },
 };
 </script>

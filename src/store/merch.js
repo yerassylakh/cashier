@@ -32,7 +32,7 @@ export default {
     },
   },
   actions: {
-    async signin({ commit }, { mobile, password, remember }) {
+    async signin({ commit }, { mobile, password }) {
       await axios
         .post(api + '/login', { mobile, password })
         .then(res => {
@@ -40,13 +40,9 @@ export default {
           commit('setMerchant', { id, name });
           commit('setToken', token);
           router.push('/stocks');
-          if (remember) {
-            commit('');
-            console.log('Commit remember');
-          }
         })
         .catch(error => {
-          console.log(error);
+          commit('setSnackbar', { ...error.response.data, type: 'error' }, { root: true });
         });
     },
     logout({ commit }) {
@@ -63,6 +59,7 @@ export default {
           console.log(res);
         })
         .catch(error => {
+          commit('setSnackbar', { ...error.response.data, type: 'error' }, { root: true });
           console.log(error);
         })
     }

@@ -28,7 +28,7 @@
             </downloadCsv>
           </div>
           <div class="data-controls__button">
-            <v-btn text outlined color="#6187ee" :disabled="selected.length > 0 ? false : true">Удалить</v-btn>
+            <v-btn text outlined color="#6187ee" :disabled="selected.length > 0 ? false : true">DELETE</v-btn>
           </div>
         </v-row>
       </div>
@@ -41,7 +41,7 @@
       :items="products"
       :items-per-page="10"
       :search="search"
-      item-key="name"
+      item-key="id"
       show-select
     >
       <template v-slot:[`item.extra_price`]="{ item }">
@@ -51,7 +51,7 @@
         <a v-text="item.name" @click="openProduct(item.id)"></a>
       </template>
     </v-data-table>
-    <ProductDialog/>
+    <ProductDialog />
   </div>
 </template>
 
@@ -80,7 +80,6 @@ export default {
   async mounted() {
     await this.$store.dispatch('product/getProducts');
     this.isLoading = false;
-    await this.$store.commit('setSnackbar', { message: 'Hello', type: 'success' })
   },
   methods: {
     extra_price(purchase_price, selling_price) {

@@ -26,7 +26,6 @@
           @blur="$v.password.$touch()"
           @click:append="showPassword = !showPassword"
         />
-        <v-checkbox v-model="remember_me" label="Remember me" />
         <v-btn width="20%" color="#6187EE" dark rounded type="submit" :loading="isLoading">Sign in</v-btn>
       </form>
     </v-sheet>
@@ -48,7 +47,6 @@ export default {
   data: () => ({
     mobile: '',
     password: '',
-    remember_me: false,
     showPassword: false,
     isLoading: false,
   }),
@@ -77,7 +75,6 @@ export default {
       const payload = {
         mobile: this.mobile,
         password: this.password,
-        remember: this.remember_me,
       };
       this.isLoading = true;
       await this.$store.dispatch('merch/signin', payload);

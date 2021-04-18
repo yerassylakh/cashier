@@ -9,8 +9,8 @@
               v-model="form.barcode"
               outlined
               dense
-              hide-details="false"
               :error-messages="barcodeError"
+              @blur="$v.form.barcode.$touch()"
             ></v-text-field>
             <barcode v-if="form.barcode" :value="form.barcode"></barcode>
           </v-col>
@@ -23,7 +23,6 @@
               outlined
               dense
               :error-messages="nameError"
-              hide-details="false"
               @blur="$v.form.name.$touch()"
             ></v-text-field>
           </v-col>
@@ -147,6 +146,7 @@ export default {
     padding: 1.5em;
     width: 100%;
     height: 100%;
+    margin-bottom: 5em;
   }
 
   &__form {

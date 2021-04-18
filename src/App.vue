@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <component :is="layout" />
-    <v-snackbar v-model="isSnackbarOpen" bottom right :color="color" :timeout="timeout">
+    <v-snackbar v-model="isSnackbarOpen" bottom right :color="color" :timeout="timeout" max-width="150px">
       {{ message }}
       <template v-slot:action="{ attrs }">
         <v-btn color="white" text v-bind="attrs" @click="isSnackbarOpen = false">Close</v-btn>
@@ -48,21 +48,21 @@ export default {
           this.color = 'green lighten-1';
           break;
         default:
+          this.color = '';
           break;
       }
 
       this.message = message;
-
       this.isSnackbarOpen = true;
       // handle status codes
-      if (status_code == 401) {
-        this.$store.dispatch('merch/logout');
+      switch (status_code) {
+        case 401:
+          this.$store.dispatch('merch/logout');
+          break;
+
+        default:
+          break;
       }
-
-      setTimeout(() => {
-        this.color = '';
-      }, this.timeout)
-
     }
   }
 };

@@ -7,9 +7,9 @@
       </router-link>
     </v-toolbar-title>
     <v-spacer></v-spacer>
-    <v-toolbar-items>
+    <v-toolbar-items style="position: relative">
       <v-divider vertical></v-divider>
-      <v-menu v-if="merchant" bottom left nudge-top="100px">
+      <v-menu v-if="merchant" bottom close-on-click transition="slide-y-transition" offset-y>
         <template v-slot:activator="{ on, attrs }">
           <v-btn v-bind="attrs" v-on="on" text>
             <v-icon class="mr-1">mdi-account</v-icon>

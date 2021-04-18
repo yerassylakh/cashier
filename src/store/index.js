@@ -63,7 +63,7 @@ export default new Vuex.Store({
           commit('setStocks', res.data.stocks)
         })
         .catch(error => {
-          commit('setSnackbar', error.response.data);
+          commit('setSnackbar', { ...error.response.data, type: 'error' }, { root: true });
         })
     }
   },

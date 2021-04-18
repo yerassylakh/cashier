@@ -30,8 +30,8 @@
       </div>
       <v-toolbar absolute bottom width="100%" class="mt-5">
         <v-spacer></v-spacer>
-        <v-btn filled color="#6187EE" dark @click="deleteProduct"> Delete product </v-btn>
-        <v-btn filled color="#6187EE" dark @click="saveProduct" class="ml-3"> Save </v-btn>
+        <v-btn filled color="#6187EE" dark @click="deleteProduct" :loading="isDeleteLoading"> Delete product </v-btn>
+        <v-btn filled color="#6187EE" dark @click="saveProduct" class="ml-3" :loading="isUpdateLoading"> Save </v-btn>
       </v-toolbar>
     </v-card>
   </v-dialog>
@@ -43,17 +43,27 @@ import { mapActions, mapGetters } from 'vuex';
 
 export default {
   components: { Form },
+  data: () => ({
+    isDeleteLoading: false,
+    isUpdateLoading: false,
+  }),
   computed: {
     ...mapGetters('product', ['isProductOpen', 'isProductLoading']),
   },
   methods: {
     ...mapActions('product', ['toggleProduct']),
     async saveProduct() {
+      this.isUpdateLoading = true;
       await this.$store.dispatch('product/updateProduct');
+      await this.$store.dispatch('product/getProducts');
+      this.isUpdateLoading = false;
       this.toggleProduct();
     },
     async deleteProduct() {
+      this.isDeleteLoading = true;
       await this.$store.dispatch('product/deleteProduct');
+      await this.$store.dispatch('product/getProducts');
+      this.isDeleteLoading = false;
       this.toggleProduct();
     },
   },
