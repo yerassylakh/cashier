@@ -48,3 +48,22 @@ export const headers = [
   { text: 'AMOUNT', value: 'amount' },
   { text: 'UM', value: 'unit' },
 ];
+
+export const categories = [
+  {
+    id: '1',
+    name: 'Test',
+  },
+  {
+    id: '2',
+    name: 'Test2',
+  },
+  {
+    id: '3',
+    name: 'Test3',
+  },
+  {
+    id: '4',
+    name: 'Test4',
+  },
+];

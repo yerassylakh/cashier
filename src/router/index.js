@@ -7,38 +7,38 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: '/',
-    name: 'Home',
-    meta: { layout: 'main', requiresAuth: true, requiresStock: true, },
-    component: () => import('@/views/Home.vue'),
+    name: 'Products',
+    meta: { layout: 'main', requiresAuth: true, requiresStock: true },
+    component: () => import('@/views/Products.vue'),
   },
   {
     path: '/signin',
     name: 'Sign in',
-    meta: { layout: 'default', requiresAuth: false, requiresStock: false, },
+    meta: { layout: 'default', requiresAuth: false, requiresStock: false },
     component: () => import('@/views/Signin.vue'),
   },
   {
     path: '/stocks',
     name: 'Stocks',
-    meta: { layout: 'main', requiresAuth: true, requiresStock: false, },
+    meta: { layout: 'main', requiresAuth: true, requiresStock: false },
     component: () => import('@/views/Stocks.vue'),
   },
   {
     path: '/sales',
     name: 'Sales',
-    meta: { layout: 'main', requiresAuth: true, requiresStock: true, },
+    meta: { layout: 'main', requiresAuth: true, requiresStock: true },
     component: () => import('@/views/Sales.vue'),
   },
   {
     path: '/write-off',
     name: 'Write-off of goods',
-    meta: { layout: 'main', requiresAuth: true, requiresStock: true, },
+    meta: { layout: 'main', requiresAuth: true, requiresStock: true },
     component: () => import('@/views/WriteOff.vue'),
   },
   {
     path: '/acceptance',
     name: 'Acceptance of goods',
-    meta: { layout: 'main', requiresAuth: true, requiresStock: true, },
+    meta: { layout: 'main', requiresAuth: true, requiresStock: true },
     component: () => import('@/views/Acceptance.vue'),
   },
 ];

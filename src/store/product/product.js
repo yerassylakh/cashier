@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import { units, headers } from './ui_product.js';
+import { units, headers, categories } from './ui_product.js';
 const api = `https://quiet-shore-01215.herokuapp.com/product`;
 
 export default {
@@ -22,6 +22,7 @@ export default {
     products: [],
     units,
     headers,
+    categories,
     isProductOpen: false,
     isProductLoading: false,
     product_id: null,
@@ -31,6 +32,7 @@ export default {
     form: s => s.form,
     form_final_price: s => s.form.final_price,
     units: s => s.units,
+    categories: s => s.categories,
     selected_unit: s => s.form.unit,
     headers: s => s.headers,
     isProductOpen: s => s.isProductOpen,
@@ -51,7 +53,7 @@ export default {
       state.product_id = null;
     },
     setForm(state, data) {
-      state.form = { ...state.form, ...data }
+      state.form = { ...state.form, ...data };
     },
     clearForm(state) {
       state.form = {
@@ -85,8 +87,8 @@ export default {
         if (el.value == value) {
           el.selected = true;
         }
-      })
-    }
+      });
+    },
   },
   actions: {
     toggleProduct({ commit }) {
@@ -101,14 +103,14 @@ export default {
         offset: 0,
         limit: 10,
         merchant_id,
-        stock_id
-      }
+        stock_id,
+      };
 
       await axios
         .post(api + '/filter', payload, {
           headers: {
             Authorization: `Bearer ${token}`,
-          }
+          },
         })
         .then(res => {
           const products = res.data.products || [];
@@ -116,7 +118,7 @@ export default {
         })
         .catch(error => {
           commit('setSnackbar', { ...error.response.data, type: 'error' }, { root: true });
-        })
+        });
     },
     async getProduct({ commit }, id) {
       const token = Cookies.get('token') || null;
@@ -125,12 +127,12 @@ export default {
         .get(`${api}/${id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
-          }
+          },
         })
         .then(res => {
           const product = res.data.product || {};
           commit('setForm', product);
-          commit('setProductId', product?.id);
+          commit('setProductId', product.id);
         })
         .catch(error => {
           commit('setSnackbar', { ...error.response.data, type: 'error' }, { root: true });
@@ -143,20 +145,28 @@ export default {
       const token = Cookies.get('token') || null;
       const { merchant_id, stock_id } = JSON.parse(localStorage.getItem('stock'));
 
-      const product = { ...getters.form, merchant_id, stock_id }
+      const product = { ...getters.form, merchant_id, stock_id };
 
       await axios
-        .post(api + '/', { product }, {
-          headers: {
-            Authorization: `Bearer ${token}`,
+        .post(
+          api,
+          { product },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           }
-        })
+        )
         .then(_ => {
-          commit('setSnackbar', { message: 'Successfully created!', type: 'success' }, { root: true });
+          commit(
+            'setSnackbar',
+            { message: 'Successfully created!', type: 'success' },
+            { root: true }
+          );
         })
         .catch(error => {
           commit('setSnackbar', { ...error.response.data, type: 'error' }, { root: true });
-        })
+        });
     },
     async deleteProduct({ commit, getters }) {
       const token = Cookies.get('token') || null;
@@ -166,31 +176,69 @@ export default {
         .delete(`${api}/${id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
-          }
+          },
         })
         .then(_ => {
-          commit('setSnackbar', { message: 'Successfully deleted!', type: 'success' }, { root: true });
+          commit(
+            'setSnackbar',
+            { message: 'Successfully deleted!', type: 'success' },
+            { root: true }
+          );
         })
+        .catch(error => {
+          commit('setSnackbar', { ...error.response.data, type: 'error' }, { root: true });
+        });
     },
     async updateProduct({ commit, getters }) {
       const token = Cookies.get('token') || null;
       const { merchant_id, stock_id } = JSON.parse(localStorage.getItem('stock'));
 
-      const product = { ...getters.form, merchant_id, stock_id }
+      const product = { ...getters.form, merchant_id, stock_id };
 
       await axios
-        .put(`${api}/`, { product }, {
-          headers: {
-            Authorization: `Bearer ${token}`,
+        .put(
+          api,
+          { product },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           }
-        })
+        )
         .then(_ => {
-          commit('setSnackbar', { message: 'Successfully saved!', type: 'success' }, { root: true });
+          commit(
+            'setSnackbar',
+            { message: 'Successfully saved!', type: 'success' },
+            { root: true }
+          );
         })
         .catch(error => {
           commit('setSnackbar', { ...error.response.data, type: 'error' }, { root: true });
-        })
+        });
+    },
+    async multipleDeleteProduct({ commit }, ids) {
+      const token = Cookies.get('token') || null;
 
+      await axios
+        .post(
+          api + '/mdelete',
+          { ids },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then(_ => {
+          commit(
+            'setSnackbar',
+            { message: 'Successfully deleted!', type: 'success' },
+            { root: true }
+          );
+        })
+        .catch(error => {
+          commit('setSnackbar', { ...error.response.data, type: 'error' }, { root: true });
+        });
     },
   },
 };

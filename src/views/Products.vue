@@ -24,11 +24,20 @@
           </div>
           <div class="data-controls__button">
             <downloadCsv :data="selected">
-              <v-btn text outlined color="#6187ee" :disabled="selected.length > 0 ? false : true">Export as CSV</v-btn>
+              <v-btn text outlined color="#6187ee" :disabled="selected.length > 0 ? false : true"
+                >Export as CSV</v-btn
+              >
             </downloadCsv>
           </div>
           <div class="data-controls__button">
-            <v-btn text outlined color="#6187ee" :disabled="selected.length > 0 ? false : true">DELETE</v-btn>
+            <v-btn
+              text
+              outlined
+              color="#6187ee"
+              :loading="isDeleteLoading"
+              :disabled="selected.length > 0 ? false : true" v-text="'DELETE'"
+              @click="multiple_delete">
+            </v-btn>
           </div>
         </v-row>
       </div>
@@ -62,7 +71,7 @@ import JsonCSV from 'vue-json-csv';
 import { mapGetters } from 'vuex';
 
 export default {
-  name: 'Home',
+  name: 'Products',
   components: {
     CreateDialog,
     ProductDialog,
@@ -70,6 +79,7 @@ export default {
   },
   data: () => ({
     isLoading: true,
+    isDeleteLoading: false,
     dialog: false,
     selected: [],
     search: '',
@@ -89,9 +99,16 @@ export default {
       return 0;
     },
     async openProduct(id) {
-      this.$store.dispatch('product/toggleProduct')
+      this.$store.dispatch('product/toggleProduct');
       await this.$store.dispatch('product/getProduct', id);
     },
+    async multiple_delete() {
+      this.isDeleteLoading = true;
+      const payload = this.selected.map(it => it.id);
+      await this.$store.dispatch('product/multipleDeleteProduct', payload);
+      await this.$store.dispatch('product/getProducts');
+      this.isDeleteLoading = false;
+    }
   },
   destroyed() {
     this.$store.commit('product/clearProducts');

@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import router from '../router/index.js'
+import router from '../router/index.js';
 const api = `https://quiet-shore-01215.herokuapp.com/merch`;
 
 export default {
@@ -61,8 +61,7 @@ export default {
         .catch(error => {
           commit('setSnackbar', { ...error.response.data, type: 'error' }, { root: true });
           console.log(error);
-        })
-    }
-
+        });
+    },
   },
 };

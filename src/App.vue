@@ -1,7 +1,14 @@
 <template>
   <v-app>
     <component :is="layout" />
-    <v-snackbar v-model="isSnackbarOpen" bottom right :color="color" :timeout="timeout" max-width="150px">
+    <v-snackbar
+      v-model="isSnackbarOpen"
+      bottom
+      right
+      :color="color"
+      :timeout="timeout"
+      max-width="150px"
+    >
       {{ message }}
       <template v-slot:action="{ attrs }">
         <v-btn color="white" text v-bind="attrs" @click="isSnackbarOpen = false">Close</v-btn>
@@ -63,8 +70,8 @@ export default {
         default:
           break;
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

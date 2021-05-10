@@ -15,23 +15,35 @@
         </v-btn>
       </v-toolbar>
       <div class="dialog__container">
-        <v-subheader>General Information</v-subheader>
-        <v-divider></v-divider>
-        <v-progress-circular
-          v-if="isProductLoading"
-          :size="100"
-          color="primary"
-          class="mx-auto"
-          indeterminate
-        ></v-progress-circular>
-        <div v-else class="dialog__form">
-          <Form />
-        </div>
+        <v-tabs v-model="tab" background-color="transparent">
+          <v-tab :ripple="false"> General Information </v-tab>
+          <v-tab :ripple="false"> History </v-tab>
+        </v-tabs>
+        <v-divider class="mt-3"></v-divider>
+        <v-tabs-items v-model="tab" class="dialog__component">
+          <v-tab-item>
+            <Form :readonly="true" :isProductLoading="isProductLoading" />
+          </v-tab-item>
+          <v-tab-item>
+            <History :isProductLoading="isProductLoading" />
+          </v-tab-item>
+        </v-tabs-items>
       </div>
       <v-toolbar absolute bottom width="100%" class="mt-5">
         <v-spacer></v-spacer>
-        <v-btn filled color="#6187EE" dark @click="deleteProduct" :loading="isDeleteLoading"> Delete product </v-btn>
-        <v-btn filled color="#6187EE" dark @click="saveProduct" class="ml-3" :loading="isUpdateLoading"> Save </v-btn>
+        <v-btn filled color="#6187EE" dark @click="deleteProduct" :loading="loading_delete">
+          Delete product
+        </v-btn>
+        <v-btn
+          filled
+          color="#6187EE"
+          dark
+          @click="saveProduct"
+          class="ml-3"
+          :loading="loading_update"
+        >
+          Save
+        </v-btn>
       </v-toolbar>
     </v-card>
   </v-dialog>
@@ -39,13 +51,15 @@
 
 <script>
 import Form from '@/components/product/Form.vue';
+import History from '@/components/product/History.vue';
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
-  components: { Form },
+  components: { Form, History },
   data: () => ({
-    isDeleteLoading: false,
-    isUpdateLoading: false,
+    loading_delete: false,
+    loading_update: false,
+    tab: 0,
   }),
   computed: {
     ...mapGetters('product', ['isProductOpen', 'isProductLoading']),
@@ -53,17 +67,17 @@ export default {
   methods: {
     ...mapActions('product', ['toggleProduct']),
     async saveProduct() {
-      this.isUpdateLoading = true;
+      this.loading_update = true;
       await this.$store.dispatch('product/updateProduct');
       await this.$store.dispatch('product/getProducts');
-      this.isUpdateLoading = false;
+      this.loading_update = false;
       this.toggleProduct();
     },
     async deleteProduct() {
-      this.isDeleteLoading = true;
+      this.loading_delete = true;
       await this.$store.dispatch('product/deleteProduct');
       await this.$store.dispatch('product/getProducts');
-      this.isDeleteLoading = false;
+      this.loading_delete = false;
       this.toggleProduct();
     },
   },
@@ -77,8 +91,9 @@ export default {
     padding: 1.5em 2em;
   }
 
-  &__form {
+  &__component {
     margin-top: 1em;
+    background: transparent !important;
   }
 }
 </style>

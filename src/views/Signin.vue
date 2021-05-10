@@ -26,7 +26,9 @@
           @blur="$v.password.$touch()"
           @click:append="showPassword = !showPassword"
         />
-        <v-btn width="20%" color="#6187EE" dark rounded type="submit" :loading="isLoading">Sign in</v-btn>
+        <v-btn width="20%" color="#6187EE" dark rounded type="submit" :loading="isLoading"
+          >Sign in</v-btn
+        >
       </form>
     </v-sheet>
   </div>

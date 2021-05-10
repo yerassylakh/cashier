@@ -39,7 +39,7 @@ export default new Vuex.Store({
     },
     clearSnackbar(state) {
       state.snackbar = null;
-    }
+    },
   },
   actions: {
     initApp({ commit }) {
@@ -60,12 +60,12 @@ export default new Vuex.Store({
           },
         })
         .then(res => {
-          commit('setStocks', res.data.stocks)
+          commit('setStocks', res.data.stocks);
         })
         .catch(error => {
           commit('setSnackbar', { ...error.response.data, type: 'error' }, { root: true });
-        })
-    }
+        });
+    },
   },
   modules: {
     merch,

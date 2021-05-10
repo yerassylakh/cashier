@@ -11,6 +11,7 @@
               dense
               :error-messages="barcodeError"
               @blur="$v.form.barcode.$touch()"
+              :loading="isProductLoading"
             ></v-text-field>
             <barcode v-if="form.barcode" :value="form.barcode"></barcode>
           </v-col>
@@ -24,6 +25,7 @@
               dense
               :error-messages="nameError"
               @blur="$v.form.name.$touch()"
+              :loading="isProductLoading"
             ></v-text-field>
           </v-col>
         </v-row>
@@ -36,6 +38,7 @@
             outlined
             v-text="unit.value"
             :class="selected_unit == unit.value ? 'v-chip--selected' : ''"
+            :loading="isProductLoading"
             @click="selectUnit(unit.value)"
           ></v-chip>
         </v-chip-group>
@@ -48,6 +51,7 @@
               outlined
               dense
               label="Cost price"
+              :loading="isProductLoading"
               hide-details="false"
             ></v-text-field>
           </v-col>
@@ -59,6 +63,7 @@
               outlined
               dense
               readonly
+              :loading="isProductLoading"
               label="Extra price"
               hide-details="false"
             ></v-text-field>
@@ -71,6 +76,7 @@
               outlined
               dense
               label="Sale price"
+              :loading="isProductLoading"
               hide-details="false"
             ></v-text-field>
           </v-col>
@@ -84,9 +90,17 @@
               dense
               placeholder="0"
               hide-details="false"
+              :loading="isProductLoading"
+              :readonly="readonly"
+              :disabled="readonly"
             ></v-text-field>
           </v-col>
         </v-row>
+        <!-- <v-row>
+          <v-col cols="6">
+            <v-select :items="categories" label="Categories" outlined dense></v-select>
+          </v-col>
+        </v-row> -->
       </form>
     </div>
   </div>
@@ -100,6 +114,7 @@ import { required, decimal } from 'vuelidate/lib/validators';
 
 export default {
   data: () => ({}),
+  props: ['readonly', 'isProductLoading'],
   mixins: [validationMixin],
   validations: {
     form: {
@@ -110,7 +125,7 @@ export default {
   },
   components: { barcode: VueBarcode },
   computed: {
-    ...mapGetters('product', ['form', 'form_final_price', 'units', 'selected_unit']),
+    ...mapGetters('product', ['form', 'form_final_price', 'units', 'selected_unit', 'categories']),
     price_extra() {
       const { purchase_price, selling_price } = this.form;
       if (purchase_price && selling_price) {
