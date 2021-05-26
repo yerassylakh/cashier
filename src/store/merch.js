@@ -25,7 +25,7 @@ export default {
       state.isAuthorized = false;
     },
     setToken(state, token) {
-      Cookies.set('token', token, { expires: 1 });
+      Cookies.set('token', token, { expires: 1000000 });
     },
     clearToken() {
       Cookies.remove('token');
@@ -56,11 +56,11 @@ export default {
       await axios
         .post(api + '/refresh', { token })
         .then(res => {
-          console.log(res);
+          const { token } = res.data;
+          commit('setToken', token);
         })
         .catch(error => {
           commit('setSnackbar', { ...error.response.data, type: 'error' }, { root: true });
-          console.log(error);
         });
     },
   },

@@ -37,6 +37,11 @@ export default {
   created() {
     this.$store.dispatch('initApp');
   },
+  mounted() {
+    setInterval(async () => {
+      await this.$store.dispatch('merch/refresh');
+    }, 1000 * 60)
+  },
   computed: {
     layout() {
       return (this.$route.meta.layout || 'default') + '-layout';
@@ -73,6 +78,9 @@ export default {
       this.isSnackbarOpen = true;
     },
   },
+  methods: {
+
+  }
 };
 </script>
 
