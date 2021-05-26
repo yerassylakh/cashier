@@ -149,7 +149,6 @@ export default {
       this.toggleWaybillDialog();
     },
     setLocalData() {
-      console.log('Set');
       if (this.comment && this.reserved_time) {
         this.comment_local = this.comment;
         this.reserved_time_local = this.reserved_time;
