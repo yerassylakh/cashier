@@ -39,7 +39,9 @@ export default {
   },
   mounted() {
     setInterval(async () => {
-      await this.$store.dispatch('merch/refresh');
+      if (this.isAuthorized) {
+        await this.$store.dispatch('merch/refresh');
+      }
     }, 1000 * 60)
   },
   computed: {
@@ -47,6 +49,7 @@ export default {
       return (this.$route.meta.layout || 'default') + '-layout';
     },
     ...mapGetters(['snackbar']),
+    ...mapGetters('merch', ['isAuthorized'])
   },
   watch: {
     snackbar(response) {

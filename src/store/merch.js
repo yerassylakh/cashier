@@ -12,6 +12,7 @@ export default {
   },
   getters: {
     merchant: s => s.merchant,
+    isAuthorized: s => s.isAuthorized,
   },
   mutations: {
     setMerchant(state, merchant) {
