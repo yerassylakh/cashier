@@ -96,11 +96,19 @@
             ></v-text-field>
           </v-col>
         </v-row>
-        <!-- <v-row>
+        <v-row>
           <v-col cols="6">
-            <v-select :items="categories" label="Categories" outlined dense></v-select>
+            <v-select
+              :items="categories"
+              label="Categories"
+              outlined
+              dense
+              :loading="isCategoriesLoading"
+              v-model="form.category_id"
+              @click="getCategories()"
+            ></v-select>
           </v-col>
-        </v-row> -->
+        </v-row>
       </form>
     </div>
   </div>
@@ -113,7 +121,9 @@ import { validationMixin } from 'vuelidate';
 import { required, decimal } from 'vuelidate/lib/validators';
 
 export default {
-  data: () => ({}),
+  data: () => ({
+    isCategoriesLoading: false,
+  }),
   props: ['readonly', 'isProductLoading'],
   mixins: [validationMixin],
   validations: {
@@ -149,6 +159,11 @@ export default {
   },
   methods: {
     ...mapMutations('product', ['selectUnit']),
+    async getCategories() {
+      this.isCategoriesLoading = true;
+      await this.$store.dispatch('product/getCategories');
+      this.isCategoriesLoading = false;
+    },
   },
 };
 </script>

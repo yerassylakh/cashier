@@ -5,6 +5,7 @@ import Cookies from 'js-cookie';
 // import router from '../router/index.js';
 import merch from './merch.js';
 import waybill from './waybill.js';
+import order from './order.js';
 import product from './product/product.js';
 
 const api = 'https://quiet-shore-01215.herokuapp.com';
@@ -15,7 +16,7 @@ export default new Vuex.Store({
   state: {
     selectedStock: null,
     stocks: [],
-    snackbar: null, // { type: 'error | success | default', status_code: '200-501', message: '' }
+    snackbar: null,
   },
   getters: {
     selectedStock: s => s.selectedStock,
@@ -74,5 +75,6 @@ export default new Vuex.Store({
     merch,
     product,
     waybill,
+    order
   },
 });

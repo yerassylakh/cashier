@@ -121,9 +121,6 @@ export default {
       this.setLocalData();
     }
   },
-  beforeDestroy() {
-    this.toggleWaybillDialog();
-  },
   methods: {
     ...mapActions('waybill', ['toggleWaybillDialog', 'deleteWaybill']),
     async updateWaybill() {

@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import { units, headers, categories } from './ui_product.js';
+import { units, headers } from './ui_product.js';
 const api = `https://quiet-shore-01215.herokuapp.com`;
 
 export default {
@@ -18,12 +18,13 @@ export default {
       merchant_id: null,
       created_on: null,
       stock_id: null,
+      category_id: null,
     },
     products: [],
     history: [],
     units,
     headers,
-    categories,
+    categories: [],
     isProductOpen: false,
     isHistoryLoading: false,
     isProductLoading: false,
@@ -35,7 +36,7 @@ export default {
     form: s => s.form,
     form_final_price: s => s.form.final_price,
     units: s => s.units,
-    categories: s => s.categories,
+    categories: s => s.categories || [],
     selected_unit: s => s.form.unit,
     headers: s => s.headers,
     isProductOpen: s => s.isProductOpen,
@@ -44,6 +45,12 @@ export default {
     product_id: s => s.product_id,
   },
   mutations: {
+    setCategories(state, categories) {
+      state.categories = categories;
+    },
+    clearCategories(state) {
+      state.categories = [];
+    },
     setProducts(state, products) {
       state.products = products;
     },
@@ -104,6 +111,36 @@ export default {
     },
   },
   actions: {
+    async getCategories({ commit }) {
+      const token = Cookies.get('token') || null;
+      const { merchant_id, stock_id } = JSON.parse(localStorage.getItem('stock'));
+      const payload = {
+        offset: 0,
+        limit: 10,
+        merchant_id,
+        stock_id,
+      };
+      await axios
+        .post(api + '/category/filter', payload, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then(res => {
+          const categories = res.data.categories || [];
+          const array = categories.map(it => {
+            it = {
+              value: it.id,
+              text: it.name,
+            };
+            return it;
+          });
+          commit('setCategories', array);
+        })
+        .catch(error => {
+          commit('setSnackbar', { ...error.response.data, type: 'error' }, { root: true });
+        });
+    },
     toggleProduct({ commit }) {
       commit('clearForm');
       commit('toggleProduct');
@@ -113,7 +150,7 @@ export default {
       const { merchant_id, stock_id } = JSON.parse(localStorage.getItem('stock'));
       const payload = {
         offset: 0,
-        limit: 50,
+        limit: 1000,
         merchant_id,
         stock_id,
       };
@@ -134,7 +171,7 @@ export default {
     },
     async getHistory({ commit }, id) {
       const token = Cookies.get('token') || null;
-      const paylaod = {
+      const payload = {
         id,
         limit: 1000,
         offset: 0,
@@ -142,7 +179,7 @@ export default {
 
       commit('setHistoryLoading', true);
       await axios
-        .post(api + '/transfer/get_list', paylaod, {
+        .post(api + '/transfer/get_list', payload, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -183,7 +220,6 @@ export default {
       const { merchant_id, stock_id } = JSON.parse(localStorage.getItem('stock'));
 
       const product = { ...getters.form, merchant_id, stock_id };
-
       await axios
         .post(
           api + '/product',

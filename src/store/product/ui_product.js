@@ -47,6 +47,7 @@ export const headers = [
   { text: 'SELLING PRICE', value: 'selling_price' },
   { text: 'AMOUNT', value: 'amount' },
   { text: 'UM', value: 'unit' },
+  { text: 'Category', value: 'category' },
 ];
 
 export const categories = [
