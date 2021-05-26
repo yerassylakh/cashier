@@ -4,7 +4,10 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 // import router from '../router/index.js';
 import merch from './merch.js';
+import waybill from './waybill.js';
 import product from './product/product.js';
+
+const api = 'https://quiet-shore-01215.herokuapp.com';
 
 Vue.use(Vuex);
 
@@ -54,7 +57,7 @@ export default new Vuex.Store({
       const { id } = JSON.parse(localStorage.getItem('merchant'));
 
       await axios
-        .get(`https://quiet-shore-01215.herokuapp.com/stocks/list/${id}`, {
+        .get(`${api}/stocks/list/${id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -70,5 +73,6 @@ export default new Vuex.Store({
   modules: {
     merch,
     product,
+    waybill,
   },
 });

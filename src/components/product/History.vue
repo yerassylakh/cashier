@@ -1,50 +1,33 @@
 <template>
   <v-data-table
     :headers="headers"
-    :items="items"
+    :items="history"
     :items-per-page="5"
-    class="elevation-1"
-  ></v-data-table>
+    class="elevation-1 mb-5"
+    :loading="isHistoryLoading"
+  >
+    <template v-slot:[`item.Timestamp`]="{ item }">
+      <span>{{ item.Timestamp | date }}</span>
+    </template>
+  </v-data-table>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 export default {
   data: () => ({
     headers: [
-      { text: 'Action', value: 'action' },
-      { text: 'Date', value: 'date' },
-      { text: 'Employee', value: 'employee' },
-      { text: 'Amount before', value: 'amount_before' },
-      { text: 'Amount after', value: 'amount_after' },
-      { text: 'Difference', value: 'difference' },
-    ],
-    items: [
-      {
-        action: 'Price change',
-        date: '08.05.2021 06:32',
-        employee: 'Arnur',
-        amount_before: 50,
-        amount_after: 50,
-        difference: 0,
-      },
-      {
-        action: 'Price change',
-        date: '04.05.2021 16:22',
-        employee: 'Arnur',
-        amount_before: 50,
-        amount_after: 50,
-        difference: 0,
-      },
-      {
-        action: 'Accept',
-        date: '23.04.2021 11:25',
-        employee: 'Arnur',
-        amount_before: 50,
-        amount_after: 50,
-        difference: 0,
-      },
+      { text: 'Reason', value: 'reason' },
+      { text: 'Date and time', value: 'Timestamp' },
+      { text: 'Amount', value: 'amount' },
+      { text: 'Selling price', value: 'selling_price' },
+      { text: 'Purchase price', value: 'purchase_price' },
+      { text: 'Source', value: 'source' },
     ],
   }),
+  computed: {
+    ...mapGetters('product', ['isHistoryLoading', 'history']),
+  },
 };
 </script>
 

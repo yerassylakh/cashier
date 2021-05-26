@@ -2,7 +2,7 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import router from '../router/index.js';
-const api = `https://quiet-shore-01215.herokuapp.com/merch`;
+const api = 'https://quiet-shore-01215.herokuapp.com/merch';
 
 export default {
   namespaced: true,

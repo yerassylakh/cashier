@@ -59,17 +59,18 @@ export default {
           break;
       }
 
-      this.message = message;
-      this.isSnackbarOpen = true;
-      // handle status codes
       switch (status_code) {
         case 401:
           this.$store.dispatch('merch/logout');
           break;
-
+        case 404:
+          this.message = '404 page not found';
+          break;
         default:
           break;
       }
+      this.message = message;
+      this.isSnackbarOpen = true;
     },
   },
 };

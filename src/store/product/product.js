@@ -2,7 +2,7 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { units, headers, categories } from './ui_product.js';
-const api = `https://quiet-shore-01215.herokuapp.com/product`;
+const api = `https://quiet-shore-01215.herokuapp.com`;
 
 export default {
   namespaced: true,
@@ -20,15 +20,18 @@ export default {
       stock_id: null,
     },
     products: [],
+    history: [],
     units,
     headers,
     categories,
     isProductOpen: false,
+    isHistoryLoading: false,
     isProductLoading: false,
     product_id: null,
   },
   getters: {
     products: s => s.products,
+    history: s => s.history,
     form: s => s.form,
     form_final_price: s => s.form.final_price,
     units: s => s.units,
@@ -37,6 +40,7 @@ export default {
     headers: s => s.headers,
     isProductOpen: s => s.isProductOpen,
     isProductLoading: s => s.isProductLoading,
+    isHistoryLoading: s => s.isHistoryLoading,
     product_id: s => s.product_id,
   },
   mutations: {
@@ -78,6 +82,15 @@ export default {
     setProductLoading(state, value) {
       state.isProductLoading = value;
     },
+    setHistoryLoading(state, value) {
+      state.isHistoryLoading = value;
+    },
+    setHistory(state, value) {
+      state.history = value;
+    },
+    clearHistory(state) {
+      state.history = null;
+    },
     selectUnit(state, value) {
       state.units.map(el => {
         el.selected = false;
@@ -98,16 +111,15 @@ export default {
     async getProducts({ commit }) {
       const token = Cookies.get('token') || null;
       const { merchant_id, stock_id } = JSON.parse(localStorage.getItem('stock'));
-
       const payload = {
         offset: 0,
-        limit: 10,
+        limit: 50,
         merchant_id,
         stock_id,
       };
 
       await axios
-        .post(api + '/filter', payload, {
+        .post(api + '/product/filter', payload, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -120,11 +132,36 @@ export default {
           commit('setSnackbar', { ...error.response.data, type: 'error' }, { root: true });
         });
     },
+    async getHistory({ commit }, id) {
+      const token = Cookies.get('token') || null;
+      const paylaod = {
+        id,
+        limit: 1000,
+        offset: 0,
+      };
+
+      commit('setHistoryLoading', true);
+      await axios
+        .post(api + '/transfer/get_list', paylaod, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then(res => {
+          commit('setHistory', res.data.transfers || []);
+        })
+        .catch(error => {
+          commit('setSnackbar', { ...error.response.data, type: 'error' }, { root: true });
+        })
+        .finally(_ => {
+          commit('setHistoryLoading', false);
+        });
+    },
     async getProduct({ commit }, id) {
       const token = Cookies.get('token') || null;
       commit('setProductLoading', true);
       await axios
-        .get(`${api}/${id}`, {
+        .get(`${api}/product/${id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -149,7 +186,7 @@ export default {
 
       await axios
         .post(
-          api,
+          api + '/product',
           { product },
           {
             headers: {
@@ -173,7 +210,7 @@ export default {
       const id = getters.product_id;
 
       await axios
-        .delete(`${api}/${id}`, {
+        .delete(`${api}/product/${id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -197,7 +234,7 @@ export default {
 
       await axios
         .put(
-          api,
+          api + '/product',
           { product },
           {
             headers: {
@@ -221,7 +258,7 @@ export default {
 
       await axios
         .post(
-          api + '/mdelete',
+          api + '/product/mdelete',
           { ids },
           {
             headers: {

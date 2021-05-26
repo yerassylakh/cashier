@@ -31,7 +31,7 @@
       </div>
       <v-toolbar absolute bottom width="100%" class="mt-5">
         <v-spacer></v-spacer>
-        <v-btn filled color="#6187EE" dark @click="deleteProduct" :loading="loading_delete">
+        <v-btn filled color="red darken-3" dark @click="deleteProduct" :loading="loading_delete">
           Delete product
         </v-btn>
         <v-btn

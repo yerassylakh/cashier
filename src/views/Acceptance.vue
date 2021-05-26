@@ -2,7 +2,7 @@
   <div>
     <v-sheet color="transparent mb-5">
       <v-row>
-        <v-col cols="5">
+        <v-col cols="2">
           <v-text-field
             v-model="search"
             label="Search"
@@ -20,17 +20,7 @@
       <div class="data-controls__container">
         <v-row>
           <div class="data-controls__button">
-            <CreateAcceptance />
-          </div>
-          <div class="data-controls__button">
-            <v-btn
-              text
-              outlined
-              color="#6187ee"
-              :disabled="selected.length > 0 ? false : true"
-              v-text="'DELETE'"
-            >
-            </v-btn>
+            <create-waybill :type="type" title="Acceptance" />
           </div>
         </v-row>
       </div>
@@ -38,101 +28,79 @@
     <v-data-table
       class="elevation-1"
       :headers="headers"
-      :items="items"
+      :items="waybills"
       :items-per-page="10"
       :search="search"
       item-key="id"
-      show-select
-      v-model="selected"
-      dense
+      :loading="isLoading"
     >
+      <template v-slot:[`item.reserved_time`]="{ item }">
+        <span>{{ item.reserved_time | date }}</span>
+      </template>
       <template v-slot:[`item.status`]="{ item }">
-        <span>
+        <v-chip :color="getColor(item.status)" dark>
           {{ item.status }}
-        </span>
+        </v-chip>
+      </template>
+      <template v-slot:[`item.open`]="{ item }">
+        <v-icon @click="openWaybill(item)">mdi-open-in-new</v-icon>
       </template>
     </v-data-table>
+    <waybill-dialog
+      :type="type"
+      title="Acceptance"
+      :isProductLoading="isProductLoading"
+    ></waybill-dialog>
   </div>
 </template>
 
 <script>
-import CreateAcceptance from '@/components/acceptance/CreateAcceptance.vue';
+import CreateWaybill from '@/components/waybill/CreateWaybill.vue';
+import WaybillDialog from '@/components/waybill/WaybillDialog.vue';
+import { mapGetters } from 'vuex';
 
 export default {
-  name: 'Acceptance',
+  name: 'WriteOff_of_goods',
   components: {
-    CreateAcceptance,
+    WaybillDialog,
+    CreateWaybill,
   },
   data: () => ({
     isLoading: false,
+    isProductLoading: false,
     search: '',
-    selected: [],
     headers: [
       { text: 'Number', value: 'number' },
-      { text: 'The supplier', value: 'supplier' },
-      { text: 'Recipient', value: 'recipient' },
-      { text: 'Invoice source', value: 'invoice_source' },
-      { text: 'Total sum', value: 'total_sum' },
-      { text: 'Paid', value: 'paid' },
-      { text: 'Remains', value: 'remain' },
-      { text: 'Date and time', value: 'date' },
+      { text: 'Comment', value: 'comment' },
+      { text: 'Total cost', value: 'total_cost' },
+      { text: 'Reserved', value: 'reserved_time' },
       { text: 'Status', value: 'status' },
+      { text: 'Open', value: 'open' },
     ],
-    items: [
-      {
-        id: 1,
-        number: '',
-        supplier: 'GregorySupplier',
-        recipient: 'Artem',
-        invoice_source: 'Outlet',
-        total_sum: '130 T',
-        paid: '130 T',
-        remain: '0 T',
-        date: '05.05.2021, 22:40',
-        status: 'Draft',
-      },
-      {
-        id: 2,
-        number: '',
-        supplier: 'GregorySupplier',
-        recipient: 'Artem',
-        invoice_source: 'Outlet',
-        total_sum: '160 T',
-        paid: '160 T',
-        remain: '0 T',
-        date: '06.05.2021, 11:40',
-        status: 'Completed',
-      },
-      {
-        id: 3,
-        number: '',
-        supplier: 'GregorySupplier',
-        recipient: 'Artem',
-        invoice_source: 'Outlet',
-        total_sum: '160 T',
-        paid: '160 T',
-        remain: '0 T',
-        date: '06.05.2021, 11:40',
-        status: 'Completed',
-      },
-      {
-        id: 4,
-        number: '',
-        supplier: 'GregorySupplier',
-        recipient: 'Artem',
-        invoice_source: 'Outlet',
-        total_sum: '160 T',
-        paid: '160 T',
-        remain: '0 T',
-        date: '06.05.2021, 11:40',
-        status: 'Completed',
-      },
-    ],
+    type: 'inwaybill',
   }),
+  computed: {
+    ...mapGetters('waybill', ['waybills']),
+  },
   methods: {
     getColor(status) {
       return status.toLowerCase() == 'draft' ? 'orange' : 'green';
     },
+    async openWaybill(item) {
+      this.$store.dispatch('waybill/toggleWaybillDialog');
+      this.isProductLoading = true;
+      await this.$store.dispatch('waybill/getWaybillProducts', item.id);
+      this.isProductLoading = false;
+      this.$store.dispatch('waybill/setWaybillData', item);
+    },
+  },
+  async mounted() {
+    this.isLoading = true;
+    await this.$store.dispatch('waybill/getWaybills', { waybill_type: this.type });
+    this.isLoading = false;
+  },
+  beforeDestroy() {
+    this.$store.commit('waybill/clearWaybills');
   },
 };
 </script>

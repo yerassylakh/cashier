@@ -157,6 +157,7 @@ export default {
 .product-form {
   background: #fff;
   width: 100%;
+  border-radius: 5px;
   &__container {
     padding: 1.5em;
     width: 100%;

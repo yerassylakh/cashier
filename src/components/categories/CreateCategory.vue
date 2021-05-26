@@ -1,13 +1,13 @@
 <template>
   <v-dialog v-model="dialog" fullscreen hide-overlay transition="dialog-bottom-transition">
     <template v-slot:activator="{ on, attrs }">
-      <v-btn filled border-radius color="#6187EE" dark v-bind="attrs" v-on="on">
-        Create a write-off
+      <v-btn filled border-radius color="#6187EE" dark v-bind="attrs" v-on="on" @click="test">
+        Create a Acceptance
       </v-btn>
     </template>
     <v-card color="rgb(238, 238, 238)" scrollable>
       <v-toolbar>
-        <v-toolbar-title>Create a write-off</v-toolbar-title>
+        <v-toolbar-title>Create a Acceptance</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-btn icon @click="dialog = false">
           <v-icon>mdi-close</v-icon>
@@ -17,47 +17,6 @@
         <div class="mt-4">
           <v-sheet class="create__container">
             <v-subheader>General information</v-subheader>
-            <v-row class="mt-5">
-              <v-col cols="12" md="3">
-                <v-text-field
-                  :value="merchant.name"
-                  label="Employee"
-                  readonly
-                  outlined
-                  disabled
-                  dense
-                ></v-text-field>
-              </v-col>
-
-              <v-col cols="12" md="3">
-                <v-text-field
-                  :value="new Date().toLocaleDateString()"
-                  label="Date of creation writeoff"
-                  readonly
-                  outlined
-                  disabled
-                  dense
-                ></v-text-field>
-              </v-col>
-
-              <v-col cols="12" md="3">
-                <v-text-field
-                  v-model="actual_date"
-                  label="Actual write-off date"
-                  dense
-                  outlined
-                ></v-text-field>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col cols="12" md="9">
-                <v-text-field label="Comment" outlined dense>
-                </v-text-field>
-              </v-col>
-            </v-row>
-          </v-sheet>
-          <v-sheet class="create__container mt-5">
-            <v-subheader>Products for write-off</v-subheader>
           </v-sheet>
         </div>
       </v-container>
@@ -68,7 +27,7 @@
           Save as draft
         </v-btn>
         <v-btn filled color="#6187EE" dark class="ml-3" @click="create" :loading="isLoadingCreate">
-          Write Off
+          Accept
         </v-btn>
       </v-toolbar>
     </v-card>
@@ -90,6 +49,9 @@ export default {
     closeDialog() {
       this.dialog = false;
       // clear form data
+    },
+    test() {
+      console.log('test', 123);
     },
     async create() {
 

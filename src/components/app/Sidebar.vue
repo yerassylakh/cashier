@@ -40,7 +40,7 @@ export default {
   data: () => ({
     items: [
       { title: 'Products', icon: 'mdi-shopping-outline', to: '/' },
-      { title: 'Sales', icon: 'mdi-view-dashboard', to: '/sales' },
+      { title: 'Sales', icon: 'mdi-sale', to: '/sales' },
       { title: 'Write-off of goods', icon: 'mdi-checkbook', to: '/write-off' },
       { title: 'Acceptance of goods', icon: 'mdi-comment-check-outline', to: '/acceptance' },
     ],

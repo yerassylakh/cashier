@@ -25,7 +25,7 @@
       <v-btn v-else text>
         <router-link to="/signin" tag="span">
           <v-icon class="mr-1">mdi-login</v-icon>
-          <span>Войти</span>
+          <span>Log in</span>
         </router-link>
       </v-btn>
     </v-toolbar-items>

@@ -24,9 +24,9 @@
           </div>
           <div class="data-controls__button">
             <downloadCsv :data="selected">
-              <v-btn text outlined color="#6187ee" :disabled="selected.length > 0 ? false : true"
-                >Export as CSV</v-btn
-              >
+              <v-btn text outlined color="#6187ee" :disabled="selected.length > 0 ? false : true">
+                Export as CSV
+              </v-btn>
             </downloadCsv>
           </div>
           <div class="data-controls__button">
@@ -35,8 +35,10 @@
               outlined
               color="#6187ee"
               :loading="isDeleteLoading"
-              :disabled="selected.length > 0 ? false : true" v-text="'DELETE'"
-              @click="multiple_delete">
+              :disabled="selected.length > 0 ? false : true"
+              v-text="'DELETE'"
+              @click="multiple_delete"
+            >
             </v-btn>
           </div>
         </v-row>
@@ -101,6 +103,7 @@ export default {
     async openProduct(id) {
       this.$store.dispatch('product/toggleProduct');
       await this.$store.dispatch('product/getProduct', id);
+      await this.$store.dispatch('product/getHistory', id);
     },
     async multiple_delete() {
       this.isDeleteLoading = true;
@@ -108,7 +111,7 @@ export default {
       await this.$store.dispatch('product/multipleDeleteProduct', payload);
       await this.$store.dispatch('product/getProducts');
       this.isDeleteLoading = false;
-    }
+    },
   },
   destroyed() {
     this.$store.commit('product/clearProducts');
